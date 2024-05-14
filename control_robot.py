@@ -3,7 +3,7 @@ import numpy as np
 from lane import Lane
 import edge_detection as Edge
 from ultralytics import YOLO
-from control import right, left, forward, stop # предполагаемые функции, которые управляют колесами 
+from motor2 import Robot # предполагаемые функции, которые управляют колесами 
 
 # Функция для детекции объектов с помощью YOLO
 def detect_objects_yolo(frame, roi):
@@ -12,7 +12,7 @@ def detect_objects_yolo(frame, roi):
 
 
 # Функция для управления движением робота
-def control_robot(central_line, image):
+def control_robot(robot, central_line, image):
     image_width = image.shape[0]
 
     # Проверяем, есть ли центральная линия на изображении
@@ -22,15 +22,15 @@ def control_robot(central_line, image):
         
         # Если отклонение положительное, поворачиваем вправо, иначе влево
         if deviation > 0:
-            right()
+            robot.right()
         else:
-            left()
+            robot.left()
         
         # Дополнительно можно регулировать скорость в зависимости от величины отклонения
         
         # Двигаемся вперед
-        forward()
+        robot.forward()
     else:
         # Если центральная линия не обнаружена, останавливаем движение
-        stop()
+        robot.stop()
 
