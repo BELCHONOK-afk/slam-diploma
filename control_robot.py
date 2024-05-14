@@ -26,7 +26,6 @@ def control_robot(robot, central_line, image):
         else:
             robot.left()
         
-        # Дополнительно можно регулировать скорость в зависимости от величины отклонения
         
         # Двигаемся вперед
         robot.forward()

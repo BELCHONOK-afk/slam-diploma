@@ -5,14 +5,14 @@ import numpy as np
 #from ultralytics import YOLO
 import time
 from picamera2 import Picamera2
-import cv2
+
 
 #импортируем кастомные модули
 from VisualOdometry import CameraPoses # расчет положения камеры
 from lane import Lane # детектирование полосы движения
 import edge_detection as Edge
 from map import Map #построение траектории по полученным данным положения камеры 
-#import control_robot as Control #модуль с логикой управления 
+import control_robot as Control #модуль с логикой управления 
 from loop_closure import LoopClosureDetect
 from motor2 import Robot 
 import motor2
@@ -185,20 +185,6 @@ def main():
             
             cv2.putText(new_frame_with_keypoints, f'FPS: {int(fps)}', (20,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 2)
             
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[0, 0],2)), (260,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[0, 1],2)), (340,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[0, 2],2)), (420,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[1, 0],2)), (260,90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[1, 1],2)), (340,90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[1, 2],2)), (420,90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[2, 0],2)), (260,130), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[2, 1],2)), (340,130), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[2, 2],2)), (420,130), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-            
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[0, 3],2)), (540,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[1, 3],2)), (540,90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-            # cv2.putText(new_frame_with_keypoints, str(np.round(cur_pose[2, 3],2)), (540,130), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-        
 
             if ld.detect_loop_closure(histogram1, histogram2):
                 cv2.putText(new_frame_with_keypoints, 'Loop Detected! Change path!', (int(0.1*width),int(0.1*height)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
@@ -210,7 +196,8 @@ def main():
             # выход из цикла по нажатию кнопки 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
-
+            
+            Control.control_robot(robot, center_line)
         
 
         # Stop when the video is finished
